@@ -92,12 +92,34 @@ Problem 1 (Total 20 point. 5 point each)
 
 ACST Exercise 2.1.1, part e, f, g and h.
 
+36/348
+Let T and U be relations over the set A = {1,2,3,4}, as follows:
+T = {(1,1),(2,1),(3,3),(4,4),(3,4)}
+U = {(2,4),(1,3),(3,3),(3,2)}.
+Calculate the following sets:
+a. P({x, y,z})
+b. U(3)
+c. U(4)
+d. T ∪U
+e. T ∩U
+f. T −U
+g. U ◦T
+h. T ◦U
 
 Problem 2 (Total 20 point, 10 points each)
 
 ACST Exercise 2.2.1 part c, e. If the resulting formula is a well-formed 
 formula, give the syntactic derivation as in Example 2.6.  If not, give reasons
 to support your answer.
+
+45/348
+Which of the following are well-formed formulas in the accesscontrol logic? Support your answers by appealing to the BNF specification.
+a. ((p∧ ¬q) ⊃ (Cal controls r))
+b. ((Gin ⇒ r)∧q)
+c. (Mel | Ned says (r ⊃ t))
+d. (¬t ⇒ Sal)
+e. (Ulf controls (Vic | Wes ⇒ Tor))
+f. (Pat controls (Quint controls (Ryne says s)))
 
 --------------------------------------------------------------------------------
 Part II: Programming
@@ -123,7 +145,9 @@ i. nand
 
 Answer:
 
-
+> nand :: bool -> bool -> bool
+> nand True True = False
+> nand _ _ = True
 
 
 
