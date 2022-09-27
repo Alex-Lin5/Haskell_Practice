@@ -97,7 +97,7 @@ Let T and U be relations over the set A = {1,2,3,4}, as follows:
 T = {(1,1),(2,1),(3,3),(4,4),(3,4)}
 U = {(2,4),(1,3),(3,3),(3,2)}.
 Calculate the following sets:
-a. P({x, y,z})
+a. P({x,y,z})
 = {∅, {x}, {y}, {z}, {x, y}, {x, z}, {y, z}, {x, y, z}}
 
 b. U(3)
@@ -107,11 +107,20 @@ c. U(4)
 = {4}
 
 d. T ∪U
+= {(1,1),(2,1),(3,3),(4,4),(3,4),(2,4),(1,3),(3,2)}
 
 e. T ∩U
+= {(3,3)}
+
 f. T −U
+= {(1,1),(2,1),(4,4),(3,4)}
+
 g. U ◦T
+= {(1,3),(1,4),(2,4),(3,3),(3,4),(3,1)}
+
 h. T ◦U
+= {(1,3),(2,3),(3,3),(3,2)}
+
 
 Problem 2 (Total 20 point, 10 points each)
 
@@ -122,11 +131,40 @@ to support your answer.
 45/348
 Which of the following are well-formed formulas in the accesscontrol logic? Support your answers by appealing to the BNF specification.
 a. ((p∧ ¬q) ⊃ (Cal controls r))
+= Form ⊃ Form
+= (Form ∧ Form) ⊃ (Princ controls Form)
+= (PropVar ∧ ¬PropVar) ⊃ (Princ controls PropVar)
+= (p ∧ ¬q) ⊃ (Cal controls r)
+
 b. ((Gin ⇒ r)∧q)
+= Form ∧ Form
+= (Princ ⇒ Princ) ∧ PropVar
+while r is a PropVar but not Princ, so it is not a well-formed formula
+
 c. (Mel | Ned says (r ⊃ t))
+= Form says Form
+= Princ says (Form ⊃ Form)
+= (Princ | Princ) says (PropVar ⊃ PropVar)
+= (Mel | Ned) says (r ⊃ t)
+
 d. (¬t ⇒ Sal)
+= Princ ⇒ Princ
+Because t is not a Princ but a PropVar, so this is not a well-formed formula
+
 e. (Ulf controls (Vic | Wes ⇒ Tor))
+= Princ controls Form
+= Princ controls (Princ ⇒ Princ)
+= Princ controls (Princ | Princ ⇒ Princ)
+= Ulf controls (Vic | Wes ⇒ Tor)
+
 f. (Pat controls (Quint controls (Ryne says s)))
+= Princ controls Form
+= Princ controls (Princ controls Form)
+= Princ controls (Princ controls (Princ says Form))
+= Princ controls (Princ controls (Princ says PropVar))
+= Pat controls (Quint controls (Ryne says s))
+
+In conclusion, {a, c, e, f} statements are well-formed formulas in the access controll logic.
 
 --------------------------------------------------------------------------------
 Part II: Programming
@@ -202,7 +240,11 @@ Failed, one module loaded.
 
 > dropOdd :: [a] -> [a]
 > dropOdd [] = []
-> dropOdd (x1:x2:xs) = x1:dropOdd xs
+> dropOdd [x] = [x]
+> dropOdd (x1:x2:xs) = x1:(dropOdd xs)
+
+*Main> dropOdd [3..20]
+[3,5,7,9,11,13,15,17,19]
 
 --------------------------------------------------------------------------------
 
@@ -226,9 +268,14 @@ Defining a function via recursion (Hutton Section 6.8, ex. 7)
 
 > merge :: (Ord a) => [a] -> [a] -> [a]
 > merge [] [] = []
+> merge x [] = x
+> merge [] y = y
 > merge (x:xs) (y:ys) 
 >   | x < y = x:merge xs (y:ys)
->   | x > y = y:merge (x:xs) ys
+>   | otherwise = y:merge (x:xs) ys
+
+*Main> merge [1..5] [3..9]
+[1,2,3,3,4,4,5,5,6,7,8,9]
 
 --------------------------------------------------------------------------------
 End of Homework 01 Part II submission

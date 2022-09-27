@@ -2,6 +2,10 @@
 Practice repository of static-typed, pure functional programming langugae Haskell.
 
 ## Getting Started
+Docker image in windows platform behaves a little different from MacOS. 
+- If Haskell script is successfully compiled on MacOS, it will compile on Windows as well. 
+- While in execution level, windows ghci has more rigirous standard than MacOS, sometimes the instruction throws out an error on Windows but not on MacOS.
+### Command
 - `docker compose build`, build or rebuild all services speicified in docker compose file.
 - `docker compose run --rm practice sh`, start ***practice*** service with default shell.
 
