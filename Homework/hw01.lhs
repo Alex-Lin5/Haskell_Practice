@@ -98,9 +98,16 @@ T = {(1,1),(2,1),(3,3),(4,4),(3,4)}
 U = {(2,4),(1,3),(3,3),(3,2)}.
 Calculate the following sets:
 a. P({x, y,z})
+= {∅, {x}, {y}, {z}, {x, y}, {x, z}, {y, z}, {x, y, z}}
+
 b. U(3)
+= {3, 4}
+
 c. U(4)
+= {4}
+
 d. T ∪U
+
 e. T ∩U
 f. T −U
 g. U ◦T
@@ -145,7 +152,7 @@ i. nand
 
 Answer:
 
-> nand :: bool -> bool -> bool
+> nand :: Bool -> Bool -> Bool
 > nand True True = False
 > nand _ _ = True
 
@@ -157,7 +164,9 @@ ii. xor
 
 Answer:
 
-
+> xor :: Bool -> Bool -> Bool
+> xor False False = True
+> xor _ _ = False
 
 -------------------------------------------------------------------------------- 
 
@@ -173,12 +182,27 @@ their positions are odd numbers. For example:
  
 *** Put your answer below. For codes, DO NOT FORGET to add the > symbol.
 
-> dropOdd    :: [a] -> [a]  -- continue to fill in your code below
+% > dropodd    :: [a] -> [a]  -- continue to fill in your code below
+% > dropodd :: [a] -> [a]
+% > dropodd [] = []
+% > dropodd xs = [x | (x, n) <- index xs, n `mod` 2 == 0]
+% >   where index :: [a] -> [(a, Integer)]
+% >       index [] = [([], 0)]
+% >       index xs = zip xs [0..]
 
+error:
+    `unlit' failed in phase `Literate pre-processor'. (Exit code: 1)
+  |
+1 | --------------------------------------------------------------------------------
+  | ^
+Failed, one module loaded.
+<interactive>:1:1: error:
+    Could not find module ‘Main’
+    Use -v (or `:set -v` in ghci) to see a list of the files searched for.
 
-
-
-
+> dropOdd :: [a] -> [a]
+> dropOdd [] = []
+> dropOdd (x1:x2:xs) = x1:dropOdd xs
 
 --------------------------------------------------------------------------------
 
@@ -200,11 +224,11 @@ Defining a function via recursion (Hutton Section 6.8, ex. 7)
 
 *** Put your answer below. For codes, DO NOT FORGET to add the > symbol.
 
-    merge :: (Ord a) => [a] -> [a] -> [a]
-
-
-
-
+> merge :: (Ord a) => [a] -> [a] -> [a]
+> merge [] [] = []
+> merge (x:xs) (y:ys) 
+>   | x < y = x:merge xs (y:ys)
+>   | x > y = y:merge (x:xs) ys
 
 --------------------------------------------------------------------------------
 End of Homework 01 Part II submission
