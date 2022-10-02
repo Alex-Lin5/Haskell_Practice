@@ -220,13 +220,12 @@ their positions are odd numbers. For example:
  
 *** Put your answer below. For codes, DO NOT FORGET to add the > symbol.
 
-% > dropodd    :: [a] -> [a]  -- continue to fill in your code below
-% > dropodd :: [a] -> [a]
-% > dropodd [] = []
-% > dropodd xs = [x | (x, n) <- index xs, n `mod` 2 == 0]
-% >   where index :: [a] -> [(a, Integer)]
-% >       index [] = [([], 0)]
-% >       index xs = zip xs [0..]
+> dropodd    :: [a] -> [a]  -- continue to fill in your code below
+> dropodd [] = []
+> dropodd xs = [x | (x, n) <- index xs, n `mod` 2 == 0]
+>   where index :: [a] -> [(a, Integer)]
+>         index [] = []
+>         index xs = zip xs [0..]
 
 error:
     `unlit' failed in phase `Literate pre-processor'. (Exit code: 1)
@@ -238,10 +237,15 @@ Failed, one module loaded.
     Could not find module ‘Main’
     Use -v (or `:set -v` in ghci) to see a list of the files searched for.
 
-> dropOdd :: [a] -> [a]
-> dropOdd [] = []
-> dropOdd [x] = [x]
-> dropOdd (x1:x2:xs) = x1:(dropOdd xs)
+Homework/hw01.lhs:227:9: error: parse error on input ‘index’
+    |
+227 | >       index [] = []
+    |         ^^^^^
+
+% > dropOdd :: [a] -> [a]
+% > dropOdd [] = []
+% > dropOdd [x] = [x]
+% > dropOdd (x1:x2:xs) = x1:(dropOdd xs)
 
 *Main> dropOdd [3..20]
 [3,5,7,9,11,13,15,17,19]
