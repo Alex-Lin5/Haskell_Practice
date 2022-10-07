@@ -85,6 +85,7 @@ mult1 :: Int -> Int -> Int -> Int
 
 *** Put your answer below. For codes, DO NOT FORGET to add the > symbol.
 
+> mult1 = \x y z -> x*y*z
 
 
 Note: to complete this question, you may find the slides to Chapter 4 helpful.
@@ -99,8 +100,8 @@ Test your function mult1 (your answer to part a) against mult by completing the
 *** Put your answer below. For codes, DO NOT FORGET to add the > symbol.
 
 
-prop_multeq       :: Int -> Int -> Int -> Bool
-prop_multeq x y z =  *BLANK*
+> prop_multeq       :: Int -> Int -> Int -> Bool
+> prop_multeq x y z = ( mult1 x y z == mult x y z )
 
 
 
@@ -109,8 +110,10 @@ prop_multeq x y z =  *BLANK*
 c. (3 point) Run quickCheck on prop_multeq and copy the results in the space 
 below:
 
-
-
+*Main> prop_multeq 2 3 8
+True
+*Main> quickCheck prop_multeq
++++ OK, passed 100 tests.
 
 
 
@@ -148,10 +151,15 @@ main> luhnDouble 6
 
 *** Put your answer below. For codes, DO NOT FORGET to add the > symbol.
 
+> luhnDouble :: Int -> Int
+> luhnDouble x
+>     | 2*x < 9 = 2*x
+>     | otherwise = 2*x-9
 
-
-
-
+*Main> luhnDouble 4
+8
+*Main> luhnDouble 13
+17
 
 --------------------------------------------------------------------------------
 
@@ -168,8 +176,8 @@ False
 
 *** Put your answer below. For codes, DO NOT FORGET to add the > symbol.
 
-
-
+> luhn :: Int -> Int -> Int -> Int -> Bool
+> luhn a b c d = (\x -> luhnDouble x) (a + b + c + d) mod 10 
 
 
 
