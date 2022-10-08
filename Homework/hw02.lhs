@@ -158,8 +158,8 @@ main> luhnDouble 6
 
 *Main> luhnDouble 4
 8
-*Main> luhnDouble 13
-17
+*Main> luhnDouble 8
+7
 
 --------------------------------------------------------------------------------
 
@@ -177,7 +177,14 @@ False
 *** Put your answer below. For codes, DO NOT FORGET to add the > symbol.
 
 > luhn :: Int -> Int -> Int -> Int -> Bool
-> luhn a b c d = (\x -> luhnDouble x) (a + b + c + d) mod 10 
+> luhn a b c d = ((luhnDouble a + b + luhnDouble c + d) `mod` 10) == 0
+
+% > luhn (a -> b -> c -> d) = ((luhnDouble a + b + luhnDouble c + d) `mod` 10) == 0
+% > luhn a b c d = ((fun [a, b, c, d]) mod 10) == 0
+% >     where fun :: [a] -> Int
+% >           fun [] = 0
+% >           fun [a] = a
+% >           fun [xs] = [x | x <- xs, luhnDouble x]
 
 
 
@@ -190,21 +197,24 @@ i. (6 point)
 Create two cases for testing the function luhn. Two of them should return True 
 and the remaining two cases should return False. State the four cases below:
 
-case 1:  Input:    
-         Expected output: 
+case 1:  Input:    ghci> luhn 1 7 8 4
+                     True
+         Expected output: True
 
 
-case 2:  Input:    
-         Expected result: 
+case 2:  Input:    ghci> luhn 1 9 1 7
+                     True
+         Expected result: True
 
 
-case 3:  Input:    
-         Expected result: 
+case 3:  Input:    ghci> luhn 4 7 8 3
+                     False
+         Expected result: False
 
 
-case 4:  Input:    
-         Expected result:  
-
+case 4:  Input:    ghci> luhn 1 2 3 4
+                     False
+         Expected result:  False
 
 
 ii. (6 point)
@@ -217,14 +227,18 @@ egHUnit.lhs
 part i (with the tools given in HUnit) to verify the luhn function. Put the 
 testing code in the space below: 
 
-
-
-
-
+> testcase1 = TestCase (assertEqual "for: luhn 1 7 8 4" True (luhn 1 7 8 4))
+> testcase2 = TestCase (assertEqual "for: luhn 1 9 1 7" True (luhn 1 9 1 7))
+> testcase3 = TestCase (assertEqual "for: luhn 4 7 8 3" False (luhn 4 7 8 3))
+> testcase4 = TestCase (assertEqual "for: luhn 1 2 3 4" False (luhn 1 2 3 4))
+> testsfun = TestList [testcase1, testcase2, testcase3, testcase4]
 
 (3 point) Discuss the results of testing (that are printed on the screen) in the
 space provided:
 
+ghci> runTestTT testsfun
+Cases: 4  Tried: 4  Errors: 0  Failures: 0
+Counts {cases = 4, tried = 4, errors = 0, failures = 0}
 
 
 
@@ -258,10 +272,19 @@ applying the function redup.
 
 *** Put your answer below. For codes, DO NOT FORGET to add the > symbol.
 
+> splt :: (Eq a) => ([a], [a]) -> ([a], [a])
+> splt ([],ys) = ([],ys)
+> splt ((x:xs),ys)
+>     | (x `elem` ys) = splt (xs,ys)
+>     | otherwise = splt (xs,(ys ++ [x]))
 
+> rmdup :: (Eq a) => [a] -> [a]
+> rmdup xs = (\(a,b) -> b) (splt (xs,[]))
 
+*Main> rmdup [1,2,2,4,4]
+*** Exception: Homework/hw02.lhs:303:13-34: Non-exhaustive patterns in function tklast
 
-
+Homework/hw02.lhs line 277: unlit: Program line next to comment
 
 
 --------------------------------------------------------------------------------
@@ -280,10 +303,16 @@ but if the first list contains duplicates, so will the result.
 
 *** Put your answer below. For codes, DO NOT FORGET to add the > symbol.
 
+> unionn :: (Eq a) => [a] -> [a] -> [a]
+> unionn [] [] = []
+> unionn [] ys = rmdup ys
+> unionn xs [] = xs
+> unionn xs ys = xs ++ [y | y <- rmdup ys, (y `elem` xs) == False]
 
-
-
-
+*Main> unionn "doog" "cow"
+"doogcw"
+*Main> "dogg" `unionn` "cow"
+"doggcw"
 
 
 
@@ -315,25 +344,39 @@ Write a operator o to implement the composition of relations (ACST,p.11).
 For example, if q and r are relations:
 
 
-q :: [(Float, Int)]
-q =  [( 1.0, 1), ( 2.0, 3), ( 3.0, 3), ( 4.0, 4)] 
+> q :: [(Float, Int)]
+> q =  [( 1.0, 1), ( 2.0, 3), ( 3.0, 3), ( 4.0, 4)] 
 
 and 
 
-r :: [(Int, Char)]
-r =  [( 1, 'a'), ( 2, 'b'), ( 3, 'b'), (3, 'c')] 
+> r :: [(Int, Char)]
+> r =  [( 1, 'a'), ( 2, 'b'), ( 3, 'b'), (3, 'c')] 
 
 
 Then 
 
-q o r = [(1.0, 'a'), ( 2.0, 'b'), (2.0, 'c'), (3.0, 'a'), (3.0, 'c')]
+q o r = [(1.0, 'a'), ( 2.0, 'b'), (2.0, 'c'), (3.0, 'b'), (3.0, 'c')]
 
 *** Put your answer below. For codes, DO NOT FORGET to add the > symbol.
 
+> (#) :: (Eq b) => [(a, b)] -> [(b, c)] -> [(a, c)]
+> (#) a b = [(x,y) | (x,p) <- a, (q,y) <- b, p == q]
 
+*Main> q # r
+[(1.0,'a'),(2.0,'b'),(2.0,'c'),(3.0,'b'),(3.0,'c')]
+*Main> (#) q r
+[(1.0,'a'),(2.0,'b'),(2.0,'c'),(3.0,'b'),(3.0,'c')]
+*Main> q
+[(1.0,1),(2.0,3),(3.0,3),(4.0,4)]
+*Main> r
+[(1,'a'),(2,'b'),(3,'b'),(3,'c')]
 
-
-
+Homework/hw02.lhs:384:3: error:
+    Invalid type signature: (- o) :: ...
+    Should be of form <variable> :: <type>
+    |
+384 | > (-o) :: [(Float, Int)] -> [(Int, Char)] -> [(Float, Char)]
+    |   ^^^^
 
 
 
@@ -348,9 +391,17 @@ specified in (*).
 
 *** Put your answer below. For codes, DO NOT FORGET to add the > symbol.
 
+> br :: (Eq a) => [(a,b)] -> a -> [b]
+> br dt idx = [b | (a,b) <- dt, a==idx]
 
-
-
+*Main> br r 3
+"bc"
+*Main> br q 1.0
+[1]
+*Main> q
+[(1.0,1),(2.0,3),(3.0,3),(4.0,4)]
+*Main> r
+[(1,'a'),(2,'b'),(3,'b'),(3,'c')]
 
 
 
