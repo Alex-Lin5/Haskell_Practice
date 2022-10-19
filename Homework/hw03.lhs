@@ -92,27 +92,161 @@ All the questions are taken from ACST. For your convenience, the detailed
 description of these problems are printed in the document HW03-Part1.pdf for
 your reference.
 
-
 Problem 1 (Total 30 point)
 
+Given a Kripke structure (W, I, J), The function J can be extended to work over 
+arbitrary principal expressions via the following definition:
+J(P & Q) = J(P) ∪ J(Q),
+J(P | Q) = J(P) ◦ J(Q).
+
+p 51/348
+Exercise 2.3.1
+W0 = {sw,sc,ns}
+J0(Gil) = {(sw,sw),(sc,sc),(ns,ns)}
+J0(Flo) = {(sw,sw),(sw,sc),(sc,sw),(sc,sc),(ns,ns)}
+J0(Hal) = {(sw,sw),(sc,sw),(ns,ns)}
+J0(Ida) = {(sw,sc),(sc,sw),(ns,sc),(ns,ns)}.
+Calculate the following relations:
+a. J0(Hal & Gil)
+b. J0(Gil | Hal)
+c. J0(Flo & Ida)
+d. J0(Hal | Ida)
+e. J0(Ida | Hal)
+f. J0(Hal & (Ida | Hal))
+g. J0(Hal | (Ida & Hal))
+
+S ∪ T = {x | x ∈ S or x ∈ T}
+R ◦ S = {(x, z) | ∃y.((x, y) ∈ R and (y, z) ∈ S)}
+
 a. (10 point)    Exercise 2.3.1, part a.
+J0(Hal & Gil)
+= J0(Hal) ∪ J0(Gil)
+= {(sw,sw),(sc,sw),(ns,ns)} ∪ {(sw,sw),(sc,sc),(ns,ns)}
+= {(sw,sw),(sc,sc),(sc,sw),(ns,ns)}
+
 b. (10 point)    Exercise 2.3.1, part d.
+J0(Hal | Ida)
+= J0(Hal) ◦ J0(Ida)
+= {(sw,sw),(sc,sw),(ns,ns)} ◦ {(sw,sc),(sc,sw),(ns,sc),(ns,ns)}
+= {(sw,sc),(sc,sc),(ns,sc),(ns,ns)}
+
 c. (10 point)    Exercise 2.3.1, part f.
+J0(Hal & (Ida | Hal))
+= J0(Hal) ∪ (J0(Ida) ◦ J0(Hal))
+= {(sw,sw),(sc,sw),(ns,ns)} ∪ 
+   ({(sw,sc),(sc,sw),(ns,sc),(ns,ns)} ◦ {(sw,sw),(sc,sw),(ns,ns)})
+= {(sw,sw),(sc,sw),(ns,ns)} ∪ {(sw,sw),(sc,sw),(ns,ns)}
+= {(sw,sw),(sc,sw),(ns,ns)}
+= J0(Hal)
 
-
+---------------------------------------------------------------------
 Problem 2 (Total 30 point)
+
+This question refers to the Kripke model given in ACST, Exercise 2.3.3.
+a) (10 point) Give a graphical representation of the given Kripke model M. That is:
+i. Draw the directed graph which represents the relation J.
+ii. Label each node with the corresponding name in W.
+iii. For each proposition p in the set PropVar, put its name at each node 
+where p is true in the world represented by the node.
+Continue to complete the following parts of Exercise 2.3.3
+
+Exercise 2.3.3
+Let M be the Kripke structure <W,I,J>, where W, I, and J are
+defined as follows:
+• W = {t,u,v,x,y,z}
+• I : PropVar → 2 W given by:
+I(p) = {x,y,z}
+I(q) = {x,y,t}
+I(r) = {y,t,u,z}
+• J : PName → 2 W×W given by:
+J(A) = {(w,w) | w ∈ W} ∪ {(x,y),(x,z),(z,t),(y,v),(v,y),(v,x)}
+J(B) = {(x,w) | w ∈ W} ∪ {(y,t),(z,t),(t,v)}.
+Calculate each of the following sets.
+a. EM [[(p ⊃ q) ⊃ r]]
+b. EM [[A says (p ⊃ r)]]
+c. EM [[A says (B says q)]]
+d. EM [[B says (B says q)]]
+e. EM [[A controls (B says q)]]
+f. EM [[A controls (B controls q)]]
 
 a. (10 point) Give a graphical representation of the Kripke model in 
               Exercise 2.3.3.
 b. (10 point)   Exercise 2.3.3, part b. 
+EM [[A says (p ⊃ r)]]
+= {w|J(A)(w) ⊆ EM[(p⊃r)]}
+= {w|J(A)(w) ⊆ ((W-EM[(p)]) ∪ EM[(r)])}
+= {w|J(A)(w) ⊆ ((W-I(p)) ∪ I(r))}
+= {w|J(A)(w) ⊆ ({t,u,v} ∪ {y,t,u,z})}
+= {w|J(A)(w) ⊆ {y,t,u,z,v}}
+= {v,t,u,y,x}
+
 c. (10 point)   Exercise 2.3.3, part d. 
+EM [[B says (B says q)]]
+= {w|J(B)(w) ⊆ Em[(B says q)]}
+= {w|J(B)(w) ⊆ {w|J(B)(w) ⊆ EM[q]}}
+= {w|J(B)(w) ⊆ {w|J(B)(w) ⊆ I(q)}}
+= {w|J(B)(w) ⊆ W}
+= W
+
+
 d. (10 point)   Exercise 2.3.3, part e. 
+EM [[A controls (B says q)]]
+= EM[(A says (B says q)) ⊃ (B says q)]
+= (W-EM[(A says (B says q))]) ∪ EM[(B says q)]
+= (W-{w|J(A)(w) ⊆ EM[(B says q)]}) ∪ {w|J(B)(w) ⊆ EM[q]}
+= (W-{w|J(A)(w) ⊆ {w|J(B)(w) ⊆ EM[q]}}) ∪ {w|J(B)(w) ⊆ EM[q]}
+= (W-{w|J(A)(w) ⊆ {t,v}}) ∪ W
+= (W-{t,v,x,y}) ∪ W
+= {u,z} ∪ W
+= W
 
 
+---------------------------------------------------------------------
 Problem 3 (Total 50 point)
 
+a. (15point) Give a formal proof as required in Exercise 3.2.2.
+(10 point) Draw a proof tree with respect to the proof you gave.
+b. (15point) Give a formal proof as required in Exercise 3.2.4.
+(10 point) Draw a proof tree with respect to the proof you gave.
+
+Exercise 3.2.2 Technically speaking, the Equivalence rule given in Figure 3.1 
+permits replacements in only direction: having deduced ϕ1 ≡ ϕ2, 
+one can replace occurrences of ϕ1 in a formula by ϕ2, but not vice versa.
+Give a formal proof of the following derived rule which permits replacements in
+the opposite direction3:
+ϕ1 ≡ ϕ2, ψ[ϕ2/q]
+-----------
+ψ[ϕ1/q]
+
+Exercise 3.2.4 Give a formal proof for the Derived Controls rule given in Figure 3.5.
+P ⇒ Q, Q controls ϕ
+------------
+P controls ϕ
+
 a. (25 point) Exercise 3.2.2.
+ϕ1 ≡ ϕ2, ψ[ϕ2/q]
+-----------
+ψ[ϕ1/q]
+
+1. ϕ1 ≡ ϕ2        Assumption
+2. ψ[ϕ2/q]        Assumption
+3. (ϕ1 ≡ ϕ2) ⊃ (ϕ2 ≡ ϕ1)  1 Taut
+4. ϕ2 ≡ ϕ1        1,3 Modus Ponens
+5. ψ[ϕ1/q]        2,4 Equivalence
+
+
 b. (25 point) Exercise 3.2.4.
+P ⇒ Q, Q controls ϕ
+------------
+P controls ϕ
+
+1. P ⇒ Q            Assumption
+2. Q controls ϕ      Assumption
+3. (Q says ϕ) ⊃ ϕ    2 def controls
+4. P ⇒ Q ⊃ (P says ϕ ⊃ Q says ϕ) 1 speak for
+5. P says ϕ ⊃ Q says ϕ  1,4 Modus Ponens
+6. P says ϕ ⊃ ϕ      3,5 Modus Ponens
+7. P controls ϕ      6 def controls
 
 --------------------------------------------------------------------------------
 Part II: Programming ( point)
@@ -125,7 +259,7 @@ Consider the following type and data declarations:
 > type ID    = String
 
 > data Role  = Manager | Secretary | Technician
->              deriving Show
+>              deriving (Show, Eq)
 
 They are used to represent the roles of each employee in a department within an
 enterprise. For example, the following is a list of tuples, where each tuple 
@@ -150,6 +284,15 @@ For example, when applying the the department d above, we get
 You can write helpers function in your implementation.
 
 
+> count :: [(ID, Role)] -> Role -> Int
+> count [] _ = 0
+> count (x:xs) rolee
+>     | (a,b) <- x, b == rolee = 1 + count xs rolee
+>     | otherwise = count xs rolee
+
+> organize :: [(ID, Role)] -> [(Int, Role)]
+> organize [] = []
+> organize a = [(x,y)|y <- [Manager, Secretary, Technician], x <- [count a y]]
 
 --------------------------------------------------------------------------------
 
@@ -197,3 +340,16 @@ ci is
 *Main> eg5
 c ii s
 
+> instance Show Expr where
+>     show (Sym x) = [x]
+>     show (Concat a b) = show a ++ show b
+>     show (Space a b) = show a ++ " " ++ show b
+
+
+Homework/hw03.lhs:343:3: error:
+    Equations for ‘show’ have different numbers of arguments
+      Homework/hw03.lhs:343:3-29
+      Homework/hw03.lhs:344:3-46
+    |
+343 | > show Sym a = Prelude.show a
+    |   ^^^^^^^^^^^^^^^^^^^^^^^^^^^...
