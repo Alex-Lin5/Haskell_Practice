@@ -86,18 +86,18 @@ and display the steps using Feijen's notation.
 Answer: 
 
 fac 4
-= applying fac
+= {applying fac}
   4 * fac(4-1)
-= applying fac
+= {applying fac}
   4 * 3 * fac (3-1)
-= applying fac
+= {applying fac}
   4 * 3 * 2 * fac (2-1)
-= applying fac
+= {applying fac}
   4 * 3 * 2 * 1 * fac(0)
-= applying fac
-  4 * 3 * 2 * 2 * 1 * 1
-= applying *
-  48
+= {applying fac}
+  4 * 3 * 2 * 1 * 1
+= {applying *}
+  24
 
 --------------------------------------------------------------------------------
 
@@ -170,6 +170,8 @@ is not a well defined Haskell expression.
 
 
 Answer:
+
+Should use ++ operator to concatenate two list, : operator concatenate elements within a list.
 
 <interactive>:14:1: error:
     • No instance for (Num [Integer]) arising from a use of ‘it’

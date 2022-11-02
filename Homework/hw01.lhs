@@ -203,7 +203,8 @@ ii. xor
 Answer:
 
 > xor :: Bool -> Bool -> Bool
-> xor False False = True
+> xor False True = True
+> xor True False = True
 > xor _ _ = False
 
 -------------------------------------------------------------------------------- 

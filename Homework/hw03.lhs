@@ -135,9 +135,8 @@ J0(Hal & (Ida | Hal))
 = J0(Hal) ∪ (J0(Ida) ◦ J0(Hal))
 = {(sw,sw),(sc,sw),(ns,ns)} ∪ 
    ({(sw,sc),(sc,sw),(ns,sc),(ns,ns)} ◦ {(sw,sw),(sc,sw),(ns,ns)})
-= {(sw,sw),(sc,sw),(ns,ns)} ∪ {(sw,sw),(sc,sw),(ns,ns)}
-= {(sw,sw),(sc,sw),(ns,ns)}
-= J0(Hal)
+= {(sw,sw),(sc,sw),(ns,ns)} ∪ {(sw,sw),(sc,sw),(ns,sw),(ns,ns)}
+= {(sw,sw),(sc,sw),(ns,sw),(ns,ns)}
 
 ---------------------------------------------------------------------
 Problem 2 (Total 30 point)
@@ -160,7 +159,20 @@ I(q) = {x,y,t}
 I(r) = {y,t,u,z}
 • J : PName → 2 W×W given by:
 J(A) = {(w,w) | w ∈ W} ∪ {(x,y),(x,z),(z,t),(y,v),(v,y),(v,x)}
-J(B) = {(x,w) | w ∈ W} ∪ {(y,t),(z,t),(t,v)}.
+J(A)(x) = {x,y,z}
+J(A)(y) = {y,v}
+J(A)(z) = {z,t}
+J(A)(t) = {t}
+J(A)(u) = {u}
+J(A)(v) = {v,x,y}
+J(B) = {(x,w) | w ∈ W} ∪ {(y,t),(z,t),(t,v)}
+J(B)(x) = W
+J(B)(y) = {t}
+J(B)(z) = {t}
+J(B)(t) = {v}
+J(B)(u) = ∅
+J(B)(v) = ∅
+
 Calculate each of the following sets.
 a. EM [[(p ⊃ q) ⊃ r]]
 b. EM [[A says (p ⊃ r)]]
@@ -178,16 +190,16 @@ EM [[A says (p ⊃ r)]]
 = {w|J(A)(w) ⊆ ((W-I(p)) ∪ I(r))}
 = {w|J(A)(w) ⊆ ({t,u,v} ∪ {y,t,u,z})}
 = {w|J(A)(w) ⊆ {y,t,u,z,v}}
-= {v,t,u,y,x}
+= {t,u,y,z}
 
 c. (10 point)   Exercise 2.3.3, part d. 
 EM [[B says (B says q)]]
 = {w|J(B)(w) ⊆ Em[(B says q)]}
 = {w|J(B)(w) ⊆ {w|J(B)(w) ⊆ EM[q]}}
 = {w|J(B)(w) ⊆ {w|J(B)(w) ⊆ I(q)}}
-= {w|J(B)(w) ⊆ W}
-= W
-
+= {w|J(B)(w) ⊆ {w|J(B)(w) ⊆ {x,y,t}}}
+= {w|J(B)(w) ⊆ {u,v,y,z}}
+= {t,u,v}
 
 d. (10 point)   Exercise 2.3.3, part e. 
 EM [[A controls (B says q)]]
@@ -195,9 +207,8 @@ EM [[A controls (B says q)]]
 = (W-EM[(A says (B says q))]) ∪ EM[(B says q)]
 = (W-{w|J(A)(w) ⊆ EM[(B says q)]}) ∪ {w|J(B)(w) ⊆ EM[q]}
 = (W-{w|J(A)(w) ⊆ {w|J(B)(w) ⊆ EM[q]}}) ∪ {w|J(B)(w) ⊆ EM[q]}
-= (W-{w|J(A)(w) ⊆ {t,v}}) ∪ W
-= (W-{t,v,x,y}) ∪ W
-= {u,z} ∪ W
+= (W-{w|J(A)(w) ⊆ {u,v,y,z}}) ∪ {u,v,y,z}
+= (W-{u,y})∪{u,v,y,z}
 = W
 
 
@@ -233,6 +244,8 @@ a. (25 point) Exercise 3.2.2.
 3. (ϕ1 ≡ ϕ2) ⊃ (ϕ2 ≡ ϕ1)  1 Taut
 4. ϕ2 ≡ ϕ1        1,3 Modus Ponens
 5. ψ[ϕ1/q]        2,4 Equivalence
+
+Attach Taut check truth table
 
 
 b. (25 point) Exercise 3.2.4.
