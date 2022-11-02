@@ -272,7 +272,7 @@ Consider the following type and data declarations:
 > type ID    = String
 
 > data Role  = Manager | Secretary | Technician
->              deriving (Show, Eq)
+>              deriving (Show)
 
 They are used to represent the roles of each employee in a department within an
 enterprise. For example, the following is a list of tuples, where each tuple 
@@ -296,17 +296,29 @@ For example, when applying the the department d above, we get
  
 You can write helpers function in your implementation.
 
+> instance Eq Role where
+> (==) Manager Manager = True
+> (==) Secretary Secretary = True
+> (==) Technician Technician = True
+> (==) _ _ = False
 
 > count :: [(ID, Role)] -> Role -> Int
 > count [] _ = 0
 > count (x:xs) rolee
->     | (a,b) <- x, b == rolee = 1 + count xs rolee
+>     | (a,b) <- x, b Main.== rolee = 1 + count xs rolee
 >     | otherwise = count xs rolee
 
 > organize :: [(ID, Role)] -> [(Int, Role)]
 > organize [] = []
 > organize a = [(x,y)|y <- [Manager, Secretary, Technician], x <- [count a y]]
 
+Homework/hw03.lhs:299:12: warning: [-Wmissing-methods]
+    • No explicit implementation for
+        either ‘Prelude.==’ or ‘/=’
+    • In the instance declaration for ‘Eq Role’
+    |
+299 | > instance Eq Role where
+    |            ^^^^^^^
 --------------------------------------------------------------------------------
 
 Problem 5 (20 point)
