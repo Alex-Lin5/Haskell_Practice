@@ -96,7 +96,7 @@ You may assume that the functions makeSet, eqSet are correctly implemented.
 ----------
 a. (10 point)  Write a QuickCheck property 
 
-prop_union_Commutative :: Ord a => [a] -> [a] -> Bool
+> prop_union_Commutative :: Ord a => [a] -> [a] -> Bool
 
 so that it verify if the union operation for sets is commutative. 
 
@@ -108,16 +108,17 @@ underlying type a is Int.
 
 *** Put your answer below. For codes, DO NOT FORGET to add the > symbol.
 
+> prop_union_Commutative xs ys = ((union (makeSet xs) (makeSet ys)) == (union (makeSet ys) (makeSet xs)))
 
-
-
+*Main> quickCheck prop_union_Commutative 
++++ OK, passed 100 tests.
 
 --------------------------------------------------------------------------------
 
 
 b. (10 point) Write a QuickCheck property 
 
-prop_union_Associative :: Ord a => [a] -> [a] -> [a] -> Bool
+> prop_union_Associative :: Ord a => [a] -> [a] -> [a] -> Bool
 
 so that it verify if the union operation for sets is associative.
 
@@ -128,14 +129,16 @@ underlying type a is Int.
 
 *** Put your answer below. For codes, DO NOT FORGET to add the > symbol.
 
+> prop_union_Associative x y z= union (makeSet x) (union (makeSet y) (makeSet z)) == union (union (makeSet x) (makeSet y)) (makeSet z)
 
-
+*Main> quickCheck prop_union_Associative 
++++ OK, passed 100 tests.
 
 --------------------------------------------------------------------------------
 
 c. (10 point) Write a QuickCheck property
 
-prop_diff_Associative :: Ord a => [a] -> [a] -> [a] -> Bool
+> prop_diff_Associative :: Ord a => [a] -> [a] -> [a] -> Bool
 
 so that it verify if the diff operation for sets is associative.
 
@@ -146,7 +149,24 @@ underlying type a is Int.
 
 *** Put your answer below. For codes, DO NOT FORGET to add the > symbol.
 
+> prop_diff_Associative x y z = diff (makeSet x) (diff(makeSet y) (makeSet z)) == diff (diff (makeSet x) (makeSet y)) (makeSet z)
 
+*Main> quickCheck prop_diff_Associative 
+*** Failed! Falsified (after 2 tests):
+[()]
+[]
+[()]
+
+*Main> showSet (show) (a)
+"{ 1 2 3 4 5 }"
+*Main> showSet (show) b
+"{ }"
+*Main> showSet (show) c
+"{ 3 4 5 6 7 8 9 }"
+*Main> showSet (show) (diff a (diff b c))
+"{ 1 2 3 4 5 }"
+*Main> showSet (show) (diff (diff a b) c)
+"{ 1 2 }"
 
 --------------------------------------------------------------------------------
 
@@ -184,6 +204,16 @@ respectively.
 
 *** Put your answer below. For codes, DO NOT FORGET to add the > symbol.
 
+> y :: Prin
+> y = Name "You"
+> m :: Prin
+> m = Name "Me"
+> h :: Prin
+> h = Name "Him"
+> pexp1 :: Prin 
+> pexp1 = Together y m
+> pexp2 :: Prin 
+> pexp2 = Quote y (Together m h)
 
 --------------------------------------------------------------------------------
 
@@ -207,7 +237,15 @@ False
 
 *** Put your answer below. For codes, DO NOT FORGET to add the > symbol.
 
+> isSimple :: [(Prin, a)] -> Bool
+> isSimple [] = True
+> isSimple lst = ([prin|(prin, n) <- lst] == [(Name pr)|(Name pr, n) <- lst])
 
+> test2b1a :: Bool
+> test2b1a = isSimple [(pexp1,1),(m,2),(h,3)]
+
+*Main> test2b1a
+False
 
 --------------------------------------------------------------------------------
 
@@ -248,8 +286,8 @@ For example:
 > eg3a :: Prin
 > eg3a=  Name "Marcy" 
 
-> testEg3a :: Bool
-> testEg3a =  is_ACL_prin princLst eg3a
+% > testEg3a :: Bool
+% > testEg3a =  is_ACL_prin princLst eg3a
 
 You will get:
 
@@ -258,7 +296,14 @@ True
 
 *** Put your answer below. For codes, DO NOT FORGET to add the > symbol.
 
+> is_ACL_prin :: [PName] -> Prin -> Bool
+> is_ACL_prin [] pr = False
+> is_ACL_prin pns (Name n) = elem (Name n) [(Name pn)| pn <- pns]
+> is_ACL_prin pns (Together p1 p2) = (is_ACL_prin pns p1) && (is_ACL_prin pns p2)
+> is_ACL_prin pns (Quote p1 p2) = (is_ACL_prin pns p1) && (is_ACL_prin pns p2)
 
+> testEg3a :: Bool
+> testEg3a =  is_ACL_prin princLst eg3a
 
 --------------------------------------------------------------------------------
 
@@ -287,7 +332,18 @@ as input, verify if a formula is a valid ACL formula for the model M, where
 
 *** Put your answer below. For codes, DO NOT FORGET to add the > symbol.
 
-
+> is_ACL_Form :: [PName] -> [PropVar] -> Form -> Bool
+> is_ACL_Form pns [] fm = False
+> is_ACL_Form [] pvs fm = False
+> is_ACL_Form pns pvs (Var ch) = elem ch pvs
+> is_ACL_Form pns pvs (Not fm) = is_ACL_Form pns pvs fm
+> is_ACL_Form pns pvs (Or f1 f2) = (is_ACL_Form pns pvs f1) && (is_ACL_Form pns pvs f2)
+> is_ACL_Form pns pvs (And f1 f2) = (is_ACL_Form pns pvs f1) && (is_ACL_Form pns pvs f2)
+> is_ACL_Form pns pvs (Imply f1 f2) = (is_ACL_Form pns pvs f1) && (is_ACL_Form pns pvs f2)
+> is_ACL_Form pns pvs (Equiv f1 f2) = (is_ACL_Form pns pvs f1) && (is_ACL_Form pns pvs f2)
+> is_ACL_Form pns pvs (Says pr fm) = (is_ACL_prin pns pr) && (is_ACL_Form pns pvs fm)
+> is_ACL_Form pns pvs (Contr pr fm) = (is_ACL_prin pns pr) && (is_ACL_Form pns pvs fm)
+> is_ACL_Form pns pvs (For pr1 pr2) = (is_ACL_prin pns pr1) && (is_ACL_prin pns pr2)
 
 --------------------------------------------------------------------------------
 
@@ -301,8 +357,21 @@ c. (10 point)  Create two formulas f1, f2 (ACL formulas), in Haskell,  based on
 
 *** Put your answer below. For codes, DO NOT FORGET to add the > symbol.
 
+Alice says (q implies (r conjuncts s))
 
+> pnlst :: [PName]
+> pnlst = ["Alice", "Bob"]
+> pvlst :: [PropVar]
+> pvlst = ['q', 'r', 's']
+> f1 :: Form
+> f1 = Says (Name "Alice") (Imply (Var 'q') (Var 's'))
+> f2 :: Form
+> f2 = Says (Name (head princLst)) (Imply (Var 'q') (Var 's'))
 
+ghci> is_ACL_Form pnlst pvlst f1
+True
+ghci> is_ACL_Form pnlst pvlst f2
+False
 
 --------------------------------------------------------------------------------
 
@@ -310,7 +379,7 @@ Problem 4 (Total: 20 point) Higher order functions
 
 a. Define a higher order function merge 
 
-merge :: (a -> a -> Bool) -> [a] -> [a] -> [a] 
+> merge :: (a -> a -> Bool) -> [a] -> [a] -> [a] 
 
 so that 
 
@@ -329,7 +398,11 @@ cmp). For example,
 
 *** Put your answer below. For codes, DO NOT FORGET to add the > symbol.
 
-
+> merge f [] ys = ys
+> merge f xs [] = xs
+> merge f (x:xs) (y:ys) 
+>     | f x y = [x] ++ [y] ++ merge f xs ys
+>     | otherwise = [y] ++ [x] ++ merge f xs ys
 
 --------------------------------------------------------------------------------
 
