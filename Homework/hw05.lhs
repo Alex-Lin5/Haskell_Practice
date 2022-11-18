@@ -271,9 +271,41 @@ for each of these functions.
 
 *** Put your answer below. For codes, DO NOT FORGET to add the > symbol ***
 
+> em             :: (WKripke, IKripke, JKripke) -> Form -> WKripke
+> em (w, i, j) (Var c)  =  makeSet [intlst| (ch, intlst) <- flatten i, ch == c]
+> em (w, i, j) (Not f)  =  diff w (em (w, i, j) f)
+> em (w, i, j) (Or f g) = union (em (w, i, j) f) (em (w, i, j) g)
+> em (w, i, j) (And f g) = inter (em (w, i, j) f) (em (w, i, j) g)
+> em (w, i, j) (Imply f g) = union (diff w (em (w, i, j) f)) (em (w, i, j) g)
+> em (w, i, j) (Equiv f g) = inter (em (w, i, j) (Imply f g)) (em (w, i, j)(Imply g f))
 
 
+> em (w, i, j) (Says  p f) = makeSet [fr|(fr,to)<-trans laa, subSet (makeSet to) (em (w, i, j) f)] where
+>     laa = [intl2|(pn, intl2)<-flatten j, (Name pn)==p]
 
+> em (w, i, j) (Contr p f) = em (w, i, j) (Imply (Says p f) f)
+> em (w, i, j) (For p1 p2) 
+>     | subSet (makeSet [intl|(q, intl)<- flatten j, (Name q)==p2]) 
+>        (makeSet [intl|(p, intl)<- flatten j, (Name p)==p1]) = w
+>     | otherwise = empty
+
+> transmid :: Eq a => a -> [(a,a)] -> [a]
+> transmid _ [] = []
+> transmid e (x:xs) = [y|(z,y)<-[x], z==e] ++ transmid e xs
+> transmid2 :: Eq a => [a] -> [(a,a)] -> [(a,[a])]
+> transmid2 [] _ = []
+> transmid2 (x:xs) laa = [(x, (transmid x laa))] ++ transmid2 xs laa
+> trans :: Eq a => [(a,a)] -> [(a,[a])]
+> trans [] = []
+> trans laa = transmid2 ([x|(x,y)<-laa]) laa
+
+> altSet :: Ord (a,b) => Set (a,[b]) -> Set (a,b)
+> altSet alst = makeSet (altSetmid2 (flatten alst))
+> altSetmid :: (a,[b]) -> [(a,b)]
+> altSetmid alb = [(x,y)|(x,lb)<-[alb],y<-lb]
+> altSetmid2 :: [(a,[b])] -> [(a,b)]
+> altSetmid2 [] = []
+> altSetmid2 (x:xs) = (altSetmid x) ++ altSetmid2 xs
 
 
 --------------------------------------------------------------------------------
@@ -291,58 +323,120 @@ provided.
 
 a. Example 2.13 (15 point)
 
+EM2[[q ⊃ (r∧s)]] = (W2 − EM2[[q]]) ∪ EM2[[r∧s]] = {C}.
+W2 = {A,B,C,D}
+I2(p) = {A,C}
+I2(q) = {A,B,D}
+I2(r) = {}
+I2(s) = {A,B,C,D}
+J2(Obs) = {(A,A),(B,B),(C,C),(D,D)}
 
 *** i. Put your representation of the given kripke model in the space below ***
 
-
+> w2 :: Set Int
+> w2 = makeSet [0,1,2,3]
+> i2 :: Set (Char, [Int])
+> i2 = makeSet [('p',[0,2]),('q',[0,1,3]),('r',[]),('s',[0,1,2,3])]
+> j2 :: Set (PName, [(Int,Int)])
+> j2 = makeSet [("Obs",[(0,0),(1,1),(2,2),(3,3)])]
 
 *** j. Put your representation of the given formula in the space below ***
 
-
+> fm13 :: Form
+> fm13 = Imply (Var 'q') (And (Var 'r') (Var 's'))
+> eva13 :: WKripke
+> eva13 = em (w2, (altSet i2), (altSet j2)) fm13
 
 *** k. Put the results after running the em problem in the space below ***
 
-
-
+Correct
+ghci> showSet (show) eva13
+"{ 2 }"
 
 --------------------------------------------------------------------------------
 
 b. Example 2.14 (15 point)
 
-
+EM0[[Hal says g]] = {w | J0(Hal)(w) ⊆ EM0[[g]]} = {sw,sc}.
+EM0[[Flo says g]] = {w | J0(Flo)(w) ⊆ EM0[[g]]} = {}.
+W0 = {sw,sc,ns}
+I0(g) = {sw}
+J0(Flo) = {(sw,sw),(sw,sc),(sc,sw),(sc,sc),(ns,ns)}.
+J0(Gil) = {(sw,sw),(sc,sc),(ns,ns)}.
+J0(Hal) = {(sw,sw),(sc,sw),(ns,ns)}
 
 *** i. Put your representation of the given kripke model in the space below ***
 
+> w0 :: Set Int
+> w0 = makeSet [0,1,2]
+> i0 :: Set (Char, [Int])
+> i0 = makeSet [('g',[0])]
+> j0 :: Set (PName, [(Int,Int)])
+> j0 = makeSet [("Flo",[(0,0),(0,1),(1,0),(1,1),(2,2)]),
+>               ("Gil",[(0,0),(1,1),(2,2)]),
+>               ("Hal",[(0,0),(1,0),(2,2)])]
 
 
 *** j. Put your representation of the given formula in the space below ***
 
-
+> fm141 :: Form
+> fm141 = Says (Name "Hal") (Var 'g')
+> fm142 :: Form
+> fm142 = Says (Name "Flo") (Var 'g')
+> eva141 :: WKripke
+> eva141 = em (w0, altSet i0, altSet j0) fm141
+> eva142 :: WKripke
+> eva142 = em (w0, altSet i0, altSet j0) fm142
 
 *** k. Put the results after running the em problem in the space below ***
 
-
-
+All correct
+ghci> showSet (show) eva141
+"{ 0 1 }"
+ghci> showSet (show) eva142
+"{ }"
 
 --------------------------------------------------------------------------------
 
 c. Example 2.15 (15 point) 
 
-
+EM1[[Alice says (q ⊃ (r∧s))]] = {w1}.
+EM1[[q ⊃ (r∧s)]] = {w1}. 
+W1 = {w0,w1,w2}
+I1(q) = {w0,w2},
+I1(r) = {w1},
+I1(s) = {w1,w2}.
+J1(Alice) = {(w0,w0),(w1,w1),(w2,w2)},
+J1(Bob) = {(w0,w0),(w0,w1),(w1,w2),(w2,w1)}.
 
 *** i. Put your representation of the given kripke model in the space below ***
 
-
+> w1 :: Set Int
+> w1 = makeSet [0,1,2]
+> i1 :: Set (Char, [Int])
+> i1 = makeSet [('q',[0,2]),('r',[1]),('s',[1,2])]
+> j1 :: Set (PName, [(Int,Int)])
+> j1 = makeSet [("Alice",[(0,0),(1,1),(2,2)]),
+>               ("Bob",[(0,0),(0,1),(1,2),(2,1)])]
 
 *** j. Put your representation of the given formula in the space below ***
 
-
+> fm151 :: Form
+> fm151 = Says (Name "Alice") fm152
+> fm152 :: Form
+> fm152 = fm13
+> eva151 :: WKripke
+> eva151 = em (w0, altSet i1, altSet j1) fm151
+> eva152 :: WKripke
+> eva152 = em (w0, altSet i1, altSet j1) fm152
 
 *** k. Put the results after running the em problem in the space below ***
 
-
-
-
+All correct
+ghci> showSet (show) eva151
+"{ 1 }"
+ghci> showSet (show) eva152
+"{ 1 }"
 
 
 --------------------------------------------------------------------------------
