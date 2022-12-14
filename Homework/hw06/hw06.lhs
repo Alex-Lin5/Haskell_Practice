@@ -78,6 +78,10 @@ in the form
 
 is not a sum of three squares.
 
+In mathematics, Legendre's three-square theorem states that a natural number can be represented as the sum of three squares of integers
+n=x^{2}+y^{2}+z^{2}
+if and only if n is not of the form n = 4^a(8b + 7) for nonnegative integers a and b.
+7, 15, 23, 28, 31, 39, 47, 55, 60, 63, 71
 
 a. Write a function
 
@@ -91,6 +95,8 @@ it can be written in the form
 *** Put your answer by filling in the blanks (Right hand side) below. *** 
 *** For codes, DO NOT FORGET to add the > symbol ***
 
+> eightBp7 :: Integer -> Bool
+> eightBp7 k = ((mod (k-7) 8) == 0) && (k > -1)
 
 
 --------------------------------------------------------------------------------
@@ -108,10 +114,17 @@ when the input is negative) it will return false.
 *** Put your answer by filling in the blanks (Right hand side) below. *** 
 *** For codes, DO NOT FORGET to add the > symbol ***
 
+> isSumOfThreeSquares :: Integer -> Bool
+> isSumOfThreeSquares k = not (null [(x,y,z)|x<-[0..(bound k 0)], y<-[0..x], z<-[0..y], k == x*x+y*y+z*z])
+> bound :: Integer -> Integer -> Integer
+> bound k n
+>     | k<0 = 0
+>     | n*n <= k = bound k (n+1)
+>     | otherwise = n-1
 
 
-
-
+*Main> bound 4
+*** Exception: Prelude.!!: negative index
 --------------------------------------------------------------------------------
 
 c.  (10 point)
@@ -133,7 +146,10 @@ c.  (10 point)
 *** For codes, DO NOT FORGET to add the > symbol ***
 
 
-
+> prop_threeSquares :: Integer -> Bool
+> prop_threeSquares k
+>     | k>=0 = (isSumOfThreeSquares k) == (not (eightBp7 k))
+>     | otherwise = True
 
 
 --------------------------------------------------------------------------------
@@ -151,8 +167,13 @@ With respect to the results you obtained quickcheck:
 *** Put your answer by filling in the blanks (Right hand side) below. *** 
 *** For codes, DO NOT FORGET to add the > symbol ***
 
+*Main> quickCheck prop_threeSquares 
+*** Failed! Falsified (after 65 tests):
+28
 
-
+According to Legendre's three-square theorem, function eightBp7 does not cover all 
+natural numbers that are not sum of three squares because it lacks a term of 4^a
+where a is non-negative integers
 
 
 --------------------------------------------------------------------------------
@@ -169,7 +190,7 @@ group 5 are free to pick any procedural language for their implementation.
 Table 1: Preferred langauge of group members
 Group Language
 1 Java
-2 Python
+2 Python marked
 3 C/C++/C#
 4 Javascript
 5 Others
@@ -177,6 +198,9 @@ Group Language
 a. (30 point) Follow the ideas given in the file queue.lhs, implement a queue data type using two stacks.
 Your implementation must include all the functions/operations (isEmpty, add, front, remove etc.) for
 the queue datatype specified in the file queue.lhs.
+
+queue represented by 2 stacks that 1 for adding element and another one for removing,
+it requires flip operation every time add or remove element.
 
 b. (Total: 30 point) Perform property tests
 i. (15 point)

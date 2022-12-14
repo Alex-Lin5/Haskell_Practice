@@ -1,0 +1,36 @@
+Part III: Implementation of the queue data type in another language (Total: 40 point)
+For part III, please put your answer in a text file named XXX-hw06.txt, where XXX is your class student
+number.
+
+a. (20 point)
+Discuss how you use the ideas given in queue.lhs file and the property testing examples you learned
+in class in your implementation. For example, you may wish to describe how you apply the property
+testing method learned in the functional programming framework (via quickCheck) to associate and/or
+to convert from the given code queue.lhs to the code (procedural language) you implemented.
+
+I choosed front_empty as property i, and front_add as property ii for queue test. Queue represented
+by 2 stacks are defined as queue2stk class in python script. Most of the methods in queue2stk are 
+translated from queue.lhs, other methods are for printing purpose and class initialization.
+
+For property i test, I defined the behavior within a function that takes a single generic value and 
+returns boolean. An empty queue is initialized in the function and locally add an element passed as
+the function input, then judge if the front element of current queue is equal to the element passed.
+I picked negative, positive, zero number and character as test input, and they all returns true.
+
+For property ii test, similar to property i defined a test function. When queue passed to function
+is invariant(in another word under valid form) and is not empty, comparison is performed. I picked
+an empty queue and a non-empty queue that returns value of false and true, which identified the 
+front_add property only work in the precondition that queue is not empty and is invariant.
+
+b. (20 point)
+In class, we performed property testing (in the functional programming framework) to verify an
+implementation of the queue data type. Describe and discuss how to adopt this approach of property
+testing to other procedural programming tasks
+
+The top choice to implement an overall test on whether datatype just defined or complicated functions,
+is to find an automatic testing framework available for the language that you are working with. For
+example, it is available to use Robot Framework in Python, it is operation system and application 
+independent, the tests are executed from command line with optional parameters or variables passed.
+
+The second choice is to write a automatic input generation program feeding to the test, and read
+the testing result from console or shell. Manually design the size and range of data input to test.
