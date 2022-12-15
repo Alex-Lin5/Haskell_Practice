@@ -216,6 +216,13 @@ We construct rt (type: RTree Int) to meet the requirements:
 > rt :: RTree Int
 > rt = Vertex 4 [rt1, rt2, rt3]
 
+
+> rt4 :: RTree Int
+> rt4 =  Vertex 5 []
+
+> rtt :: RTree Int
+> rtt =  Vertex 6 [rt, rt4]
+
 which has 4 vertices (labelled 1,2,3 and 4) and height rt is 1 (since
 the heights of rt1, rt2, rt3 are 0).
 

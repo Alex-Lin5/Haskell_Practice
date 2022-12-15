@@ -61,7 +61,7 @@ State the reason(s) for late submission below (if needed):
    receive an exemption.
 
 --------------------------------------------------------------------------------
-
+ 
 Note:
 
 To answer the programming questions, add the haskell code according to the
